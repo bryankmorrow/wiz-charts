@@ -20,7 +20,7 @@ version: 3.3.12
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
-# It is recommended to use it with quotes.
+# It is recommended to use it with quotes. 
 appVersion: "2.7"
 
 dependencies:
@@ -30,5 +30,3 @@ dependencies:
     condition: wiz-broker.enabled
   - name: wiz-common
     version: "0.1.8"
-    repository: "file://../wiz-common"
-    condition: "true"
