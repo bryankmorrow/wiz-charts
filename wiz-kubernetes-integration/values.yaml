@@ -126,6 +126,8 @@ wiz-kubernetes-connector:
       create: false # Secret created by wiz-kubernetes-integration.
   httpProxyConfiguration:
     create: false # Secret created by wiz-kubernetes-integration.
+  broker:
+    enabled: true
 
 # Wiz Admission Controller
 # Configuration values for the wiz-admission-controller dependency
