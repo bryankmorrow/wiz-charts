@@ -31,3 +31,4 @@ dependencies:
   - name: wiz-common
     version: "0.1.8"
     repository: "file://../wiz-common"
+    condition: "true"
