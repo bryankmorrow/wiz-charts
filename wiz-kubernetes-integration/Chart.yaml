@@ -19,3 +19,6 @@ dependencies:
   repository: "file://../wiz-sensor"
   version: ">=1.0.6187"
   condition: wiz-sensor.enabled
+- name: wiz-common
+  version: "0.1.8"
+  repository: "file://../wiz-common"
