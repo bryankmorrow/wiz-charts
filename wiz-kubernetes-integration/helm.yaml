@@ -1,0 +1,372 @@
+---
+# Source: wiz-kubernetes-integration/charts/wiz-kubernetes-connector/templates/service-account-cluster-reader.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: wiz-cluster-reader
+  labels:
+    helm.sh/chart: wiz-kubernetes-connector-3.3.12
+    app.kubernetes.io/name: wiz-kubernetes-connector
+    app.kubernetes.io/instance: test
+    app.kubernetes.io/version: "2.7"
+    app.kubernetes.io/managed-by: Helm
+rules:
+  - apiGroups:
+    - '*'
+    resources:
+    - '*'
+    verbs:
+    - get
+    - list
+    - watch
+---
+# Source: wiz-kubernetes-integration/charts/wiz-kubernetes-connector/templates/service-account-cluster-reader.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: wiz-cluster-reader
+  labels:
+    helm.sh/chart: wiz-kubernetes-connector-3.3.12
+    app.kubernetes.io/name: wiz-kubernetes-connector
+    app.kubernetes.io/instance: test
+    app.kubernetes.io/version: "2.7"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name:  wiz-cluster-reader
+subjects:
+- kind: ServiceAccount
+  name: wiz-cluster-reader
+  namespace: "wiz-local"
+---
+# Source: wiz-kubernetes-integration/charts/wiz-kubernetes-connector/templates/service-account-cluster-reader.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: wiz-cluster-reader
+  namespace: "wiz-local"
+  labels:
+    helm.sh/chart: wiz-kubernetes-connector-3.3.12
+    app.kubernetes.io/name: wiz-kubernetes-connector
+    app.kubernetes.io/instance: test
+    app.kubernetes.io/version: "2.7"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
+---
+# Source: wiz-kubernetes-integration/charts/wiz-kubernetes-connector/templates/service-account-modify-connector.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: wiz-auto-modify-connector
+  namespace: "wiz-local"
+  labels:
+    helm.sh/chart: wiz-kubernetes-connector-3.3.12
+    app.kubernetes.io/name: wiz-kubernetes-connector
+    app.kubernetes.io/instance: test
+    app.kubernetes.io/version: "2.7"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade,pre-delete
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+    "helm.sh/hook-weight": "-1"
+---
+# Source: wiz-kubernetes-integration/charts/wiz-kubernetes-connector/templates/secret-connector.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: test-connector
+  namespace: "wiz-local"
+  labels:
+    helm.sh/chart: wiz-kubernetes-connector-3.3.12
+    app.kubernetes.io/name: wiz-kubernetes-connector
+    app.kubernetes.io/instance: test
+    app.kubernetes.io/version: "2.7"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": pre-install, pre-upgrade
+    "helm.sh/hook-weight": "-1"
+type: Opaque
+data:
+  connectorData: "e30="
+---
+# Source: wiz-kubernetes-integration/charts/wiz-kubernetes-connector/templates/service-account-cluster-reader.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: wiz-cluster-reader-token
+  namespace: "wiz-local"
+  labels:
+    helm.sh/chart: wiz-kubernetes-connector-3.3.12
+    app.kubernetes.io/name: wiz-kubernetes-connector
+    app.kubernetes.io/instance: test
+    app.kubernetes.io/version: "2.7"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
+    kubernetes.io/service-account.name: wiz-cluster-reader
+type: kubernetes.io/service-account-token
+---
+# Source: wiz-kubernetes-integration/templates/secrets-wiz-api-token.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: wiz-api-token
+  namespace: "wiz-local"
+  labels:
+    helm.sh/chart: wiz-kubernetes-integration-0.2.88
+    app.kubernetes.io/name: wiz-kubernetes-integration
+    app.kubernetes.io/instance: test
+    app.kubernetes.io/managed-by: Helm
+  annotations: # Secret used by per-install hook in wiz-kubernetes-connector
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-1"
+stringData:
+  clientId: "wgxq75hrlndpbktx3eupevf2x2xuxip74srfcl5r6zuviioyqmqwm"
+  clientToken: "kuy3lBqVs7hr43cnmkHBOBNWM3bEybj2KSBhIZayHbl2H1DwAERdjx3U7KmpkXWF"
+---
+# Source: wiz-kubernetes-integration/charts/wiz-kubernetes-connector/templates/service-account-modify-connector.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: wiz-auto-modify-connector
+  namespace: "wiz-local"
+  labels:
+    helm.sh/chart: wiz-kubernetes-connector-3.3.12
+    app.kubernetes.io/name: wiz-kubernetes-connector
+    app.kubernetes.io/instance: test
+    app.kubernetes.io/version: "2.7"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade,pre-delete
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+    "helm.sh/hook-weight": "-1"
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    resourceNames: ["test-connector"]
+    verbs: ["update", "get"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    resourceNames: [
+      "wiz-api-token",
+      "wiz-cluster-reader-token"
+    ]
+    verbs: ["get"]
+---
+# Source: wiz-kubernetes-integration/charts/wiz-kubernetes-connector/templates/service-account-modify-connector.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: wiz-auto-modify-connector
+  namespace: "wiz-local"
+  labels:
+    helm.sh/chart: wiz-kubernetes-connector-3.3.12
+    app.kubernetes.io/name: wiz-kubernetes-connector
+    app.kubernetes.io/instance: test
+    app.kubernetes.io/version: "2.7"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade,pre-delete
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+    "helm.sh/hook-weight": "-1"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name:  wiz-auto-modify-connector
+subjects:
+- kind: ServiceAccount
+  name: wiz-auto-modify-connector
+  namespace: "wiz-local"
+---
+# Source: wiz-kubernetes-integration/charts/wiz-kubernetes-connector/templates/job-create-connector.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: wiz-kubernetes-connector-create-connector
+  namespace: "wiz-local"
+  labels:
+    helm.sh/chart: wiz-kubernetes-connector-3.3.12
+    app.kubernetes.io/name: wiz-kubernetes-connector
+    app.kubernetes.io/instance: test
+    app.kubernetes.io/version: "2.7"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded 
+    rollme.wizApiTokenHash: ce8124bc1b0fbc0cb5cd47338ca0c7d5f5446d79936e443a201d96b192a7bd65
+    rollme.proxyHash: 7913f001e00a2427a96d0f28eb99f4f0192a9116857b4487931ea25bcb485f2a
+    rollme.brokerHash: 115ba85431eeaf8db3ff2173aee02d16e67df1555d5e1ef74cfa7ac0d812cab2   
+
+spec:
+  ttlSecondsAfterFinished: 60
+  manualSelector: true
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: wiz-kubernetes-connector
+      app.kubernetes.io/instance: test
+  backoffLimit: 1
+  template:
+    metadata:
+      labels:
+        wiz.io/component: "create-kubernetes-connector"
+        
+        helm.sh/chart: wiz-kubernetes-connector-3.3.12
+        app.kubernetes.io/name: wiz-kubernetes-connector
+        app.kubernetes.io/instance: test
+        app.kubernetes.io/version: "2.7"
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      serviceAccountName: wiz-auto-modify-connector
+      restartPolicy: "Never"
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+      volumes:
+      - name: api-client
+        secret:
+          secretName: wiz-api-token
+      containers:
+        - name: wiz-connector-creator
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 1000
+          image: wiziopublic.azurecr.io/wiz-app/wiz-broker:2.7
+          imagePullPolicy: Always
+          command:
+            - "wiz-broker"
+          args:
+            
+            - create-kubernetes-connector
+            - --api-server-endpoint
+            - "https://kubernetes.default.svc.cluster.local"
+            - --secrets-namespace
+            - "wiz-local"
+            - --service-account-token-secret-name
+            - "wiz-cluster-reader-token"
+            - --output-secret-name
+            - "test-connector"
+            - --is-on-prem=true
+            - --connector-name
+            - "morrow-argo-connector"
+            - --wait=true
+          env:
+          - name: CLI_FILES_AS_ARGS
+            value: "/var/api-client/clientToken,/var/api-client/clientId"
+          - name: LOG_LEVEL
+            value: info
+          - name: WIZ_ENV
+            value:
+          
+          volumeMounts:
+          - name: api-client
+            mountPath: /var/api-client
+            readOnly: true
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/os
+                operator: In
+                values:
+                - linux
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                - arm64
+                - amd64
+---
+# Source: wiz-kubernetes-integration/charts/wiz-kubernetes-connector/templates/job-delete-connector.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: wiz-kubernetes-connector-delete-connector
+  namespace: "wiz-local"
+  labels:
+    helm.sh/chart: wiz-kubernetes-connector-3.3.12
+    app.kubernetes.io/name: wiz-kubernetes-connector
+    app.kubernetes.io/instance: test
+    app.kubernetes.io/version: "2.7"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": pre-delete
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+    rollme.proxyHash: 7913f001e00a2427a96d0f28eb99f4f0192a9116857b4487931ea25bcb485f2a
+    rollme.brokerHash: 115ba85431eeaf8db3ff2173aee02d16e67df1555d5e1ef74cfa7ac0d812cab2 
+
+spec:
+  ttlSecondsAfterFinished: 60
+  manualSelector: true
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: wiz-kubernetes-connector
+      app.kubernetes.io/instance: test
+  backoffLimit: 1
+  template:
+    metadata:
+      labels:
+        wiz.io/component: "delete-kubernetes-connector"
+        
+        helm.sh/chart: wiz-kubernetes-connector-3.3.12
+        app.kubernetes.io/name: wiz-kubernetes-connector
+        app.kubernetes.io/instance: test
+        app.kubernetes.io/version: "2.7"
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      serviceAccountName: wiz-auto-modify-connector
+      restartPolicy: "Never"
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+      volumes:
+      - name: api-client
+        secret:
+          secretName: wiz-api-token
+      containers:
+        - name: wiz-connector-delete
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 1000
+          image: wiziopublic.azurecr.io/wiz-app/wiz-broker:2.7
+          imagePullPolicy: Always
+          command: ["/bin/sh", "-c"]
+          args:
+            - >
+              wiz-broker delete-kubernetes-connector 
+              --input-secrets-namespace 
+              "wiz-local" 
+              --input-secret-name 
+              "test-connector" 
+              || true
+          env:
+          - name: CLI_FILES_AS_ARGS
+            value: "/var/api-client/clientToken,/var/api-client/clientId"
+          - name: LOG_LEVEL
+            value: info
+          - name: WIZ_ENV
+            value:
+          
+          volumeMounts:
+          - name: api-client
+            mountPath: /var/api-client
+            readOnly: true
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/os
+                operator: In
+                values:
+                - linux
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                - arm64
+                - amd64

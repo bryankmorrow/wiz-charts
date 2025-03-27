@@ -1,0 +1,15 @@
+dependencies:
+- name: wiz-kubernetes-connector
+  repository: file://../wiz-kubernetes-connector
+  version: 3.3.12
+- name: wiz-admission-controller
+  repository: file://../wiz-admission-controller
+  version: 3.9.5
+- name: wiz-sensor
+  repository: file://../wiz-sensor
+  version: 1.0.6187
+- name: wiz-common
+  repository: file://../wiz-common
+  version: 0.1.8
+digest: sha256:c9a8565b654ab80a79d59b730e86724663ae501feb4c5be42651b70ca634020f
+generated: "2025-03-27T17:19:30.715346-05:00"
