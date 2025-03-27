@@ -27,7 +27,6 @@ dependencies:
   - name: wiz-broker
     repository: "file://../wiz-broker"
     version: "2.3.9"
-    condition: wiz-broker.enabled
   - name: wiz-common
     version: "0.1.8"
     repository: "file://../wiz-common"
