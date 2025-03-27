@@ -11,5 +11,8 @@ dependencies:
 - name: wiz-common
   repository: file://../wiz-common
   version: 0.1.8
-digest: sha256:c9a8565b654ab80a79d59b730e86724663ae501feb4c5be42651b70ca634020f
-generated: "2025-03-27T17:19:30.715346-05:00"
+- name: wiz-broker
+  repository: file://../wiz-broker
+  version: 2.3.9
+digest: sha256:bfa95997727625ce310040bc205dfb74369baa73d829204c406f295570f67cbd
+generated: "2025-03-27T17:43:35.130639-05:00"
