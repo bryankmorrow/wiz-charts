@@ -1,6 +1,0 @@
-dependencies:
-- name: wiz-common
-  repository: file://../wiz-common
-  version: 0.1.8
-digest: sha256:981f4b219aaee0bc864c4357b7e6d30a90e5d9a697bb6373d5c277dd865487e1
-generated: "2025-03-27T17:23:11.281968-05:00"

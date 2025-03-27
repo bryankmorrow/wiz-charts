@@ -1,9 +1,0 @@
-dependencies:
-- name: wiz-broker
-  repository: file://../wiz-broker
-  version: 2.3.9
-- name: wiz-common
-  repository: file://../wiz-common
-  version: 0.1.8
-digest: sha256:b17c4d3f03da59ff1d0b313938139599a13b7c0cebd42bba45adb9ec4ccc7334
-generated: "2025-03-27T17:22:58.509423-05:00"
