@@ -30,3 +30,4 @@ dependencies:
     condition: wiz-broker.enabled
   - name: wiz-common
     version: "0.1.8"
+    repository: "file://../wiz-common"
